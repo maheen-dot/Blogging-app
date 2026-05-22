@@ -5,9 +5,9 @@ function checkForAuthenticationCookie(cookieName) {
   return (req, res, next) => {
     const token = req.cookies?.[cookieName];
 
-    // ✅ CRITICAL FIX
+    
     if (!token) {
-      return next(); // just skip, don't verify
+      return next(); 
     }
 
     try {

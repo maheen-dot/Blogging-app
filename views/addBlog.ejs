@@ -150,7 +150,6 @@
     </div>
 
     <script>
-        // DOM Elements
         const fileInput = document.getElementById('fileInput');
         const fileNameSpan = document.getElementById('fileName');
         const previewImg = document.getElementById('preview');
@@ -159,11 +158,9 @@
         const keepExistingImageInput = document.getElementById('keepExistingImage');
         const removeImageBtn = document.getElementById('removeImageBtn');
         
-        // Flag to track if user selected a new file
         let newFileSelected = false;
         let imageRemoved = false;
         
-        // Handle file selection
         if (fileInput) {
             fileInput.addEventListener('change', (event) => {
                 const file = event.target.files[0];
@@ -231,14 +228,9 @@
             });
         }
         
-        // CRITICAL FIX: Handle form submission to properly retain or update image
         const form = document.querySelector('form');
         if (form) {
             form.addEventListener('submit', function(e) {
-                // THE FIX: Determine what to do with the image
-                // Case 1: User selected a new file -> upload new image
-                // Case 2: User clicked remove image -> delete existing image
-                // Case 3: No file selected AND not removed -> KEEP existing image
                 
                 if (keepExistingImageInput) {
                     if (newFileSelected && fileInput && fileInput.files && fileInput.files.length > 0) {
@@ -246,17 +238,13 @@
                         console.log(' Uploading new image file');
                         keepExistingImageInput.value = 'false';
                     } else if (imageRemoved) {
-                        // User removed the image - delete it
                         console.log('Removing image');
                         keepExistingImageInput.value = 'false';
                     } else if (keepExistingImageInput.value === 'true') {
-                        // User made no changes to image - KEEP IT!
                         console.log('Keeping existing image - no changes made');
-                        // IMPORTANT: Clear the file input so no empty file data is sent
                         if (fileInput) {
                             fileInput.value = '';
                         }
-                        // The server will see keepExistingImage=true and preserve the current image
                     }
                 }
                 
