@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+    <title>Signup</title>
+</head>
+<body class="flex flex-col justify-center items-center">
+    <h1 class="text-2xl font-bold mt-10">Signup</h1>
+    
+<form action="/users/signup" method="post">
+    <div class="grid gap-6 mt-10 mb-6 md:grid-cols-2">
+        <div>
+            <label for="username" class="block mb-2.5 text-sm font-medium text-heading">Username</label>
+            <input type="text" id="username" name="username" class="bg-neutral-secondary-medium border border-none text-heading text-sm rounded-lg focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body" placeholder="john_doe" required />
+        </div>
+        
+        
+    </div>
+    <div class="mb-6">
+        <label for="email" class="block mb-2.5 text-sm font-medium text-heading">Email address</label>
+        <input type="email" id="email" name="email" class="bg-neutral-secondary-medium border border-none text-heading text-sm rounded-lg focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body" placeholder="john.doe@company.com" required />
+    </div> 
+    <div class="mb-6">
+        <label for="password" class="block mb-2.5 text-sm font-medium text-heading">Password</label>
+        <input type="password" id="password" name="password"     class="bg-neutral-secondary-medium border border-none text-heading text-sm rounded-lg focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body" placeholder="•••••••••" required />
+    </div> 
+  
+    <div class="flex items-start mb-6">
+        
+    <button type="submit" class="text-white bg-blue-500 box-border border border-transparent hover:bg-blue-200 focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">Submit</button>
+</form>
+
+    <%- include('partials/scripts') %>
+
+</body>
+</html>

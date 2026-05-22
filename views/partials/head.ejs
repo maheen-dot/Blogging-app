@@ -1,0 +1,93 @@
+<header class="relative flex flex-wrap sm:justify-start sm:flex-nowrap w-full py-3 bg-white border-b">
+  <nav class="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
+
+    <!-- Logo -->
+    <div class="flex items-center justify-between">
+      <a class="text-xl font-semibold text-gray-800" href="/">
+        Blogify
+      </a>
+
+      <!-- Mobile Toggle -->
+      <div class="sm:hidden">
+        <button type="button"
+          class="hs-collapse-toggle size-9 flex justify-center items-center rounded-lg border text-gray-600"
+          data-hs-collapse="#navbar-collapse">
+          
+          <!-- Menu Icon -->
+          <svg class="hs-collapse-open:hidden size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-width="2" d="M3 6h18M3 12h18M3 18h18"/>
+          </svg>
+
+          <!-- Close Icon -->
+          <svg class="hs-collapse-open:block hidden size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-width="2" d="M6 6l12 12M6 18L18 6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Menu -->
+    <div id="navbar-collapse" class="hidden hs-collapse sm:block">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-5 mt-5 sm:mt-0">
+
+        <a class="font-medium text-blue-600" href="/">Home</a>
+
+        <% if (locals.user) { %>
+
+          <!-- Add Blog -->
+          <a class="text-sm text-gray-700 hover:text-blue-500" href="/blog/add-blog">
+            Add Blog
+          </a>
+
+          <!-- Dropdown -->
+          <div class="hs-dropdown relative">
+            <button class="hs-dropdown-toggle flex items-center text-sm text-gray-700">
+              <%= user.username %>
+              <svg class="ms-1 size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-width="2" d="m6 9 6 6 6-6"/>
+              </svg>
+            </button>
+
+            <div class="hs-dropdown-menu hidden absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-md p-1">
+              <a href="/logout" class="block px-3 py-2 text-sm hover:bg-gray-100 rounded">
+                Logout
+              </a>
+            </div>
+          </div>
+
+        <% } else { %>
+
+          <!-- Not logged in -->
+          <a class="text-sm text-gray-700 hover:text-blue-500" href="/users/login">
+            Login
+          </a>
+          <a class="text-sm text-gray-700 hover:text-blue-500" href="/users/signup">
+            Create Account
+          </a>
+
+        <% } %>
+
+      </div>
+    </div>
+  </nav>
+</header>
+
+<!-- Error Alert -->
+<% if (locals.error) { %>
+  <div class="max-w-[85rem] mx-auto px-4">
+    <div class="flex items-center p-4 mt-4 text-sm text-red-700 bg-red-100 rounded-lg">
+      <p><%= locals.error %></p>
+    </div>
+  </div>
+<% } %>
+<% if (locals.success) { %>
+  <div class="max-w-[85rem] mx-auto px-4">
+    <div class="flex items-center p-4 mt-4 text-sm text-green-700 bg-green-100 rounded-lg">
+      <p><%= locals.success %></p>
+    </div>
+  </div>
+<% } %>
+
+
+<!-- IMPORTANT: Preline JS -->
+<script src="https://unpkg.com/preline/dist/preline.js"></script>

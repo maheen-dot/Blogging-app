@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+    <title>Add New Blog</title>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <%- include('partials/scripts') %>
+    
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <!-- Header Section -->
+        <div class="mb-10 text-center">
+            <div class="inline-block p-3 bg-white rounded-full shadow-md mb-4">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+            </div>
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 bg-clip-text text-transparent">
+                <%= user ? `Welcome back, ${user.username}!` : 'Welcome!' %>
+            </h1>
+            <p class="text-gray-600 mt-3 text-lg"><%= user ? 'Share your thoughts with the world ' : 'Please log in to write a blog' %></p>
+        </div>
+
+        <!-- Blog Form Card -->
+        <form 
+            action="<%= blog ? `/blog/edit/${blog._id}?_method=PUT` : '/blog/add-blog' %>" 
+            method="POST" 
+            enctype="multipart/form-data"
+            class="bg-white rounded-2xl shadow-2xl p-6 md:p-8 border border-gray-100"
+        >  
+            <!-- Cover Image Upload Section -->
+            <div class="mb-8">
+                <label class="block text-sm font-bold text-gray-700 mb-3">
+                    Cover Image
+                    <span class="text-xs font-normal text-gray-400 ml-2">(Optional - adds visual appeal)</span>
+                </label>
+                
+                <!-- Hidden file input -->
+                <input type="file" id="fileInput" name="coverImage" class="hidden" accept="image/*" />
+                
+                <!-- CRITICAL FIX: Hidden field to tell server to keep existing image -->
+                <% if (blog && blog.coverImgUrl) { %>
+                    <input type="hidden" name="keepExistingImage" id="keepExistingImage" value="true" />
+                    <input type="hidden" name="existingCoverUrl" id="existingCoverUrl" value="<%= blog.coverImgUrl %>" />
+                <% } else { %>
+                    <input type="hidden" name="keepExistingImage" id="keepExistingImage" value="false" />
+                <% } %>
+                
+                <!-- Upload Area -->
+                <label for="fileInput" class="group relative flex flex-col items-center justify-center w-full min-h-[220px] border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 hover:border-blue-400 transition-all duration-300 overflow-hidden">
+                    <!-- Upload Placeholder -->
+                    <div id="uploadText" class="flex flex-col items-center justify-center py-8 transition-all duration-300 <%= (blog && blog.coverImgUrl) ? 'hidden' : '' %>">
+                        <svg class="w-14 h-14 mb-3 text-gray-400 group-hover:text-blue-500 transition-all duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-width="1.5" d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16"/>
+                        </svg>
+                        <p class="text-sm text-gray-600 font-medium">
+                            <span class="font-bold text-blue-600 group-hover:text-blue-700">Click to upload</span> or drag & drop
+                        </p>
+                        <p class="text-xs text-gray-400 mt-2">PNG, JPG, GIF up to 10MB</p>
+                    </div>
+
+                    <!-- Preview Image Container -->
+                    <div id="previewContainer" class="<%= (blog && blog.coverImgUrl) ? 'flex' : 'hidden' %> w-full h-full absolute inset-0 items-center justify-center bg-gray-100 rounded-xl">
+                        <img 
+                            id="preview" 
+                            class="max-h-[200px] w-auto object-contain rounded-lg shadow-md transition-all duration-300" 
+                            src="<%= blog && blog.coverImgUrl ? blog.coverImgUrl : '' %>" 
+                            alt="Cover preview"
+                        />
+                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                            <span class="bg-white text-gray-800 px-3 py-1.5 rounded-full text-xs font-bold shadow-lg transform transition-transform group-hover:scale-105">
+                                Change image
+                            </span>
+                        </div>
+                    </div>
+                </label>
+                
+                <!-- File info and actions -->
+                <div class="mt-3 flex items-center justify-between">
+                    <p id="fileName" class="text-sm text-gray-500"></p>
+                    <% if (blog && blog.coverImgUrl) { %>
+                        <button type="button" id="removeImageBtn" class="text-xs text-red-500 hover:text-red-700 font-semibold transition-colors duration-200 flex items-center gap-1">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                            Remove image
+                        </button>
+                    <% } %>
+                </div>
+                <p class="text-xs text-gray-400 mt-2 flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <% if (blog) { %>
+                        <span class="text-blue-600 font-medium">Important:</span> Leave image unchanged to keep current cover
+                    <% } else { %>
+                        Add a cover image to make your blog stand out
+                    <% } %>
+                </p>
+            </div>
+
+            <!-- Title Input -->
+            <div class="mb-6">
+                <label for="title" class="block text-sm font-bold text-gray-700 mb-2">
+                     Blog Title
+                </label>
+                <input 
+                    type="text" 
+                    name="title" 
+                    id="title" 
+                    value="<%= blog ? blog.title : '' %>"  
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all duration-200 text-gray-800 placeholder-gray-400 bg-white"
+                    placeholder="Enter an amazing title..."
+                    required
+                >
+            </div>
+
+            <!-- Content Textarea -->
+            <div class="mb-8">
+                <label for="blog" class="block text-sm font-bold text-gray-700 mb-2">
+                     Blog Content
+                </label>
+                <textarea 
+                    name="content" 
+                    id="blog" 
+                    rows="14" 
+                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all duration-200 text-gray-800 placeholder-gray-400 resize-y bg-white"
+                    placeholder="Write your thoughts here... Share your story, ideas, or expertise..."
+                    required
+                ><%= blog ? blog.content : '' %></textarea>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t-2 border-gray-100">
+                <button type="submit" class="flex-1 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    <%= blog ? ' Update Blog' : ' Publish Blog' %>
+                </button>
+                
+                <a href="/blogs" class="flex-1 text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3.5 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // DOM Elements
+        const fileInput = document.getElementById('fileInput');
+        const fileNameSpan = document.getElementById('fileName');
+        const previewImg = document.getElementById('preview');
+        const uploadTextDiv = document.getElementById('uploadText');
+        const previewContainer = document.getElementById('previewContainer');
+        const keepExistingImageInput = document.getElementById('keepExistingImage');
+        const removeImageBtn = document.getElementById('removeImageBtn');
+        
+        // Flag to track if user selected a new file
+        let newFileSelected = false;
+        let imageRemoved = false;
+        
+        // Handle file selection
+        if (fileInput) {
+            fileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                
+                if (file) {
+                    // User selected a new file
+                    newFileSelected = true;
+                    imageRemoved = false;
+                    
+                    // Show file name
+                    const fileSize = (file.size / 1024).toFixed(1);
+                    fileNameSpan.innerHTML = `📷 ${file.name} (${fileSize} KB)`;
+                    fileNameSpan.className = 'text-sm text-green-600 font-medium';
+                    
+                    // Read and display preview
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        previewImg.src = e.target.result;
+                        // Show preview container, hide upload text
+                        previewContainer.classList.remove('hidden');
+                        previewContainer.classList.add('flex');
+                        uploadTextDiv.classList.add('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                    
+                    // CRITICAL: When user selects new file, we want to replace the image
+                    if (keepExistingImageInput) {
+                        keepExistingImageInput.value = 'false';
+                    }
+                    
+                    // Hide remove button if it exists
+                    if (removeImageBtn) {
+                        removeImageBtn.style.display = 'none';
+                    }
+                }
+            });
+        }
+        
+        // Remove existing image functionality
+        if (removeImageBtn) {
+            removeImageBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Clear the preview and hide it
+                previewImg.src = '';
+                previewContainer.classList.add('hidden');
+                previewContainer.classList.remove('flex');
+                uploadTextDiv.classList.remove('hidden');
+                // Clear file input
+                if (fileInput) fileInput.value = '';
+                // Mark that we want to remove the image
+                if (keepExistingImageInput) {
+                    keepExistingImageInput.value = 'false';
+                }
+                // Reset flags
+                newFileSelected = false;
+                imageRemoved = true;
+                fileNameSpan.innerHTML = '🗑️ Image removed';
+                fileNameSpan.className = 'text-sm text-red-500 font-medium';
+                setTimeout(() => {
+                    fileNameSpan.textContent = '';
+                    fileNameSpan.className = 'text-sm text-gray-500';
+                }, 2000);
+                // Hide remove button after removal
+                removeImageBtn.style.display = 'none';
+            });
+        }
+        
+        // CRITICAL FIX: Handle form submission to properly retain or update image
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                // THE FIX: Determine what to do with the image
+                // Case 1: User selected a new file -> upload new image
+                // Case 2: User clicked remove image -> delete existing image
+                // Case 3: No file selected AND not removed -> KEEP existing image
+                
+                if (keepExistingImageInput) {
+                    if (newFileSelected && fileInput && fileInput.files && fileInput.files.length > 0) {
+                        // User selected new file - upload it
+                        console.log(' Uploading new image file');
+                        keepExistingImageInput.value = 'false';
+                    } else if (imageRemoved) {
+                        // User removed the image - delete it
+                        console.log('Removing image');
+                        keepExistingImageInput.value = 'false';
+                    } else if (keepExistingImageInput.value === 'true') {
+                        // User made no changes to image - KEEP IT!
+                        console.log('Keeping existing image - no changes made');
+                        // IMPORTANT: Clear the file input so no empty file data is sent
+                        if (fileInput) {
+                            fileInput.value = '';
+                        }
+                        // The server will see keepExistingImage=true and preserve the current image
+                    }
+                }
+                
+                // Allow form to submit
+                return true;
+            });
+        }
+        
+        // Drag and drop enhancements
+        const dropZone = document.querySelector('label[for="fileInput"]');
+        if (dropZone) {
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight(e) {
+                dropZone.classList.add('border-blue-500', 'bg-blue-50');
+                dropZone.classList.remove('border-gray-300', 'bg-gray-50');
+            }
+            
+            function unhighlight(e) {
+                dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+                dropZone.classList.add('border-gray-300', 'bg-gray-50');
+            }
+            
+            dropZone.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files && files.length > 0) {
+                    fileInput.files = files;
+                    const changeEvent = new Event('change', { bubbles: true });
+                    fileInput.dispatchEvent(changeEvent);
+                }
+                unhighlight();
+            }
+        }
+        
+        // Initialize preview state for edit mode
+        if (previewContainer && !previewContainer.classList.contains('hidden')) {
+            uploadTextDiv.classList.add('hidden');
+            if (previewImg && previewImg.src && previewImg.src !== '') {
+                previewImg.style.maxHeight = '200px';
+                previewImg.style.width = 'auto';
+                previewImg.style.objectFit = 'contain';
+            }
+        }
+    </script>
+</body>
+</html>

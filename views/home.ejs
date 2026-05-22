@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+    <title>Home</title>
+</head>
+<body class="bg-gray-50">
+    <%- include('partials/scripts') %>
+
+    <!-- Header -->
+    <div class="max-w-6xl mx-auto px-4 mt-8">
+        <h1 class="text-2xl font-semibold text-center mb-8">
+            <%= user ? `Welcome, ${user.username}!` : 'Please log in.' %>
+        </h1>
+
+        <!-- Blog Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <% blogs.forEach(blog => { %>
+
+            <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition overflow-hidden">
+
+                <!-- Image -->
+                <a href="/blog/<%= blog._id %>">
+                    <img 
+                        class="w-full h-48 object-cover" 
+                        src="<%= blog.coverImgUrl %>" 
+                        alt="Blog cover image"
+                    />
+                </a>
+
+                <!-- Content -->
+                <div class="p-5 flex flex-col justify-between h-[130px]">
+
+                    <h5 class="text-lg font-semibold text-gray-800 line-clamp-2">
+                        <%= blog.title %>
+                    </h5>
+
+                    <div class="mt-4">
+                        <a href="/blog/<%= blog._id %>" 
+                           class="inline-flex items-center text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg text-sm transition">
+                            Read more
+                            <svg class="w-4 h-4 ms-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-width="2" d="M19 12H5m14 0-4 4m4-4-4-4"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            <% }) %>
+
+        </div>
+    </div>
+
+</body>
+</html>
