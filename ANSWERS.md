@@ -14,7 +14,9 @@ Express made routing simple, MongoDB was flexible for storing blogs, users, comm
 3. One real edge case
 User edits a blog without uploading a new image. If not handled properly it deletes the existing image
 
-I handled this in addblog.ejs file line 42-onnwards
+I handled this in addblog.ejs file line 42-onnwards.
+
+User can only update or delete his own blogs and also can only delete his own comments.
 
 4. AI usage: 
 I used chat gpt in add blog page, first I designed the page myself but UI felt boring so i asked chatgpt to optimize it and in debugging in blog.ejs and some other places when APIs gave error responses.

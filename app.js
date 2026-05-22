@@ -8,6 +8,7 @@ const methodOverride = require('method-override');
 const session = require('express-session');
 
 const Blog = require('./models/blog');
+const User = require('./models/users');
 
 const userRoutes = require('./routes/user');
 const blogRoutes = require('./routes/blog');
@@ -47,9 +48,57 @@ app.use('/users', userRoutes);
 app.use('/blog', blogRoutes);
 
 app.get('/', async (req, res) => {
-  const allBlogs = await Blog.find({}).sort({ createdAt: -1 });
-  res.render('home', { user: req.user, blogs: allBlogs });
+
+  try {
+
+    const filter = req.query.filter || 'all';
+
+    let blogs = [];
+
+    if (filter === 'subscribed' && req.user) {
+
+      const currentUser = await User.findById(req.user.id);
+
+      // If user has not subscribed to anyone
+      if (
+        !currentUser.subscribedto ||
+        currentUser.subscribedto.length === 0
+      ) {
+
+        blogs = [];
+
+      } else {
+
+        blogs = await Blog.find({
+          author: { $in: currentUser.subscribedto }
+        })
+        .populate('author')
+        .sort({ createdAt: -1 });
+
+      }
+
+    } else {
+
+      blogs = await Blog.find({})
+        .populate('author')
+        .sort({ createdAt: -1 });
+
+    }
+
+    res.render('home', {
+      user: req.user,
+      blogs,
+      filter
+    });
+
+  } catch (error) {
+
+    console.error(error);
+    res.status(500).send('Server Error');
+
+  }
 });
+
 app.get('/logout', (req, res) => {
   res.clearCookie('token');
   res.redirect('/');

@@ -13,6 +13,26 @@
             <%= user ? `Welcome, ${user.username}!` : 'Please log in.' %>
         </h1>
 
+        <div class="flex justify-end mb-6">
+        <form method="GET" action="/">
+            <select 
+                name="filter"
+                onchange="this.form.submit()"
+                class="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+            >
+                <option value="all" <%= filter === 'all' ? 'selected' : '' %>>
+                    All Blogs
+                </option>
+
+                <% if (user) { %>
+                    <option value="subscribed" <%= filter === 'subscribed' ? 'selected' : '' %>>
+                        Subscribed
+                    </option>
+                <% } %>
+            </select>
+        </form>
+    </div>
+
         <!-- Blog Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -20,7 +40,7 @@
 
             <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition overflow-hidden">
 
-                <!-- Image -->
+                
                 <a href="/blog/<%= blog._id %>">
                     <img 
                         class="w-full h-48 object-cover" 

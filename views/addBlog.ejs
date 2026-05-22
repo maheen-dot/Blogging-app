@@ -38,7 +38,7 @@
                 <!-- Hidden file input -->
                 <input type="file" id="fileInput" name="coverImage" class="hidden" accept="image/*" />
                 
-                <!-- CRITICAL FIX: Hidden field to tell server to keep existing image -->
+                <!--  keep existing image -->
                 <% if (blog && blog.coverImgUrl) { %>
                     <input type="hidden" name="keepExistingImage" id="keepExistingImage" value="true" />
                     <input type="hidden" name="existingCoverUrl" id="existingCoverUrl" value="<%= blog.coverImgUrl %>" />
@@ -56,7 +56,6 @@
                         <p class="text-sm text-gray-600 font-medium">
                             <span class="font-bold text-blue-600 group-hover:text-blue-700">Click to upload</span> or drag & drop
                         </p>
-                        <p class="text-xs text-gray-400 mt-2">PNG, JPG, GIF up to 10MB</p>
                     </div>
 
                     <!-- Preview Image Container -->
@@ -172,7 +171,7 @@
                     
                     // Show file name
                     const fileSize = (file.size / 1024).toFixed(1);
-                    fileNameSpan.innerHTML = `📷 ${file.name} (${fileSize} KB)`;
+                    fileNameSpan.innerHTML = `${file.name} (${fileSize} KB)`;
                     fileNameSpan.className = 'text-sm text-green-600 font-medium';
                     
                     // Read and display preview
@@ -186,7 +185,7 @@
                     };
                     reader.readAsDataURL(file);
                     
-                    // CRITICAL: When user selects new file, we want to replace the image
+                    // when user selects new file, we want to replace the image
                     if (keepExistingImageInput) {
                         keepExistingImageInput.value = 'false';
                     }
@@ -217,7 +216,7 @@
                 // Reset flags
                 newFileSelected = false;
                 imageRemoved = true;
-                fileNameSpan.innerHTML = '🗑️ Image removed';
+                fileNameSpan.innerHTML = ' Image removed';
                 fileNameSpan.className = 'text-sm text-red-500 font-medium';
                 setTimeout(() => {
                     fileNameSpan.textContent = '';

@@ -18,7 +18,7 @@ const userSchema = new Schema({
   },
   profileImgUrl: {
     type: String,
-    default: 'https://ui-avatars.com/api/?name=User&background=random&color=fff'
+    default: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y'
   },
   role: {
     type: String,

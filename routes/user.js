@@ -58,7 +58,7 @@ router.post('/signup', async (req, res) => {
     }
 
    await User.create({username, email, password});
-   return res.redirect("/")
+   return res.redirect("login")
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
