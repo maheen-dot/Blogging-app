@@ -1,8 +1,5 @@
 1. How to run?
-install the dependencies using npm install command. make a .env file and copy the following
-MONGO_URI= "mongodb+srv://maheenfarhat11_db_user:VT2Y0A92zucjCl5A@cluster0.ubx8xal.mongodb.net/?appName=bloggify"
-JWT_SECRET_KEY= "mySuperSecret"
-PORT= 3000
+install the dependencies using npm install command. make a .env file 
 
 
 npm start - to run the code
